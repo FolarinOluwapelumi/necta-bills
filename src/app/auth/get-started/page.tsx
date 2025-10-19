@@ -255,19 +255,19 @@ export default function GetStartedPage() {
               "Get Started"
             )}
           </Button>
-        </form>
 
-        {/* Sign In Link */}
-        <div className="flex justify-center text-gray-600 text-sm text-center mt-6">
-          <p>Already have an account? </p>
-          <button
-            onClick={() => router.push("/auth/sign-in")}
-            className="text-[#0E70FC] underline font-semibold hover:cursor-pointer"
-            disabled={loading}
-          >
-            Sign In
-          </button>
-        </div>
+          {/* Sign In Link */}
+          <div className="flex justify-center text-gray-600 text-sm text-center">
+            <p>Already have an account? </p>
+            <button
+              onClick={() => router.push("/auth/sign-in")}
+              className="text-[#0E70FC] underline font-semibold hover:cursor-pointer"
+              disabled={loading}
+            >
+              Sign In
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Right Side - Illustration */}
