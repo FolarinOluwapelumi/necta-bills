@@ -79,7 +79,7 @@ export function CustomersChart() {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6 transition-all duration-300 hover:shadow-lg">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6 mb-6">
-        <h2 className="text-lg md:text-xl font-semibold text-gray-900">
+        <h2 className="text-base md:text-lg font-semibold text-gray-900">
           Customers
         </h2>
 
@@ -90,9 +90,9 @@ export function CustomersChart() {
               <button
                 key={period}
                 onClick={() => setSelectedRange(period)}
-                className={`px-3 py-2 rounded-lg text-xs md:text-sm transition-all duration-200 hover:scale-105 ${
+                className={`px-3 py-2 font-medium rounded-xl text-xs md:text-sm transition-all duration-200 hover:scale-105 ${
                   selectedRange === period
-                    ? "bg-gray-100 text-gray-900 font-medium" // Active state: gray bg, black text, medium font
+                    ? "bg-blue-100 text-blue-500" // Active state: gray bg, black text, medium font
                     : "text-gray-500 hover:text-gray-700" // Inactive state
                 }`}
               >
@@ -101,19 +101,19 @@ export function CustomersChart() {
             ))}
           </div>
 
-          {/* Date inputs - stack on mobile, horizontal on tablet+ */}
+          {/* Date inputs */}
           <div className="flex gap-2 sm:gap-3 items-center">
             <span className="text-gray-400 text-sm">From</span>
             <input
               type="text"
               placeholder="mm/dd/yyyy"
-              className="w-24 sm:w-32 px-2 py-2 border border-gray-200 rounded-lg text-sm transition-all duration-200 focus:ring-blue-500 focus:border-transparent"
+              className="w-25 sm:w-30 font-medium px-3 py-2 border border-gray-200 rounded-2xl text-sm transition-all duration-200 focus:ring-blue-500 focus:border-transparent"
             />
             <span className="text-gray-400 text-sm">To</span>
             <input
               type="text"
               placeholder="mm/dd/yyyy"
-              className="w-24 sm:w-32 px-2 py-2 border border-gray-200 rounded-lg text-sm transition-all duration-200 focus:ring-blue-500 focus:border-transparent"
+              className="w-25 sm:w-30 px-3 py-2 border border-gray-200 rounded-2xl text-sm transition-all duration-200 focus:ring-blue-500 focus:border-transparent"
             />
           {/* </div> */}
         </div>
@@ -162,7 +162,7 @@ export function CustomersChart() {
           <button
             key={period}
             onClick={() => setSelectedPeriod(period)}
-            className={`px-3 py-2 rounded-lg text-xs transition-all duration-200 hover:scale-105 ${
+            className={`px-3 py-2 rounded-xl sm:rounded-2xl text-xs transition-all duration-200 hover:scale-105 ${
               selectedPeriod === period
                 ? "bg-gray-100 text-gray-900 font-medium" // Active state
                 : "text-gray-400 hover:text-gray-600" // Inactive state

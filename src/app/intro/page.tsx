@@ -23,7 +23,7 @@ export default function InvitationPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-start mt-0 px-10 pt-6">
+      <div className="flex-1 flex items-start mt-10 px-10 pt-6">
         <div className=" w-full">
           <h1 className="text-2xl md:text-4xl font-semibold text-black leading-tight mb-8">
             You have been invited to join the NectaBills Admin Workspace
