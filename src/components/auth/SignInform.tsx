@@ -16,11 +16,13 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // const [successMessage, setSuccessMessage] = useState(initialMessage || "");
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [successMessageState, setSuccessMessageState] = useState(initialMessage || "");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -46,7 +48,9 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md">
       {/* Email Address */}
       <div>
-        <label className="block text-sm font-medium text-black mb-2">Email Address</label>
+        <label className="block text-sm font-medium text-black mb-2">
+          Email Address
+        </label>
         <input
           type="email"
           name="email"
@@ -58,10 +62,11 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
           required
         />
       </div>
-
       {/* Password */}
       <div>
-        <label className="block text-sm font-medium text-black mb-2">Password</label>
+        <label className="block text-sm font-medium text-black mb-2">
+          Password
+        </label>
         <input
           type="password"
           name="password"
@@ -73,21 +78,14 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
           required
         />
       </div>
-
-      {/* Success Message
-      {successMessage && (
+      {/* Success Message */}
+      {successMessageState && (
         <div className="text-green-600 text-sm bg-green-50 p-3 rounded">
-          {successMessage}
-        </div>
-      )} */}
-
-      {/* Error Message */}
-      {error && (
-        <div className="text-red-500 text-sm">
-          {error}
+          {successMessageState}
         </div>
       )}
-
+      {/* Error Message */}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
       {/* Sign In Button */}
       <button
         type="submit"
@@ -96,7 +94,6 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
       >
         {loading ? "Signing In..." : "Sign In"}
       </button>
-
       {/* Forgot Password Link */}
       <div className="text-center">
         <button
