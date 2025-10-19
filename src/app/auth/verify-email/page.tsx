@@ -22,11 +22,11 @@ export default function VerifyEmailPage({
         </div>
 
         <h1 className="text-2xl md:text-4xl font-extrabold text-black mb-4">
-          YOU'VE GOT MAIL!
+          YOU&apos;VE GOT MAIL!
         </h1>
 
         <p className="text-gray-600 mb-8">
-          Please, enter the 6 digit verification code sent to
+          Please enter the 6 digit verification code sent to
           <br />
           <span className="font-semibold text-black">
             {searchParams.email || "dominic@gmail.com"}

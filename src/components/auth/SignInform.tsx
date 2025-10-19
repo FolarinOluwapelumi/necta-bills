@@ -16,7 +16,7 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(initialMessage || "");
+  // const [successMessage, setSuccessMessage] = useState(initialMessage || "");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,12 +74,12 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
         />
       </div>
 
-      {/* Success Message */}
+      {/* Success Message
       {successMessage && (
         <div className="text-green-600 text-sm bg-green-50 p-3 rounded">
           {successMessage}
         </div>
-      )}
+      )} */}
 
       {/* Error Message */}
       {error && (
