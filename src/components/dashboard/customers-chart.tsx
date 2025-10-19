@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Button } from "@/components/ui/button";
+
 
 const chartData = [
   { name: "1D", value: 400 },
@@ -38,26 +38,13 @@ const timePeriods = [
   "All",
 ];
 
-const CustomDot = (props: any) => {
-  const { cx, cy, payload } = props;
-  // Highlight the highest value point with a green circle
-  const maxValue = Math.max(...chartData.map((d) => d.value));
-  if (payload.value === maxValue) {
-    return (
-      <circle
-        cx={cx}
-        cy={cy}
-        r={6}
-        fill="#10B981"
-        stroke="#fff"
-        strokeWidth={2}
-      />
-    );
-  }
-  return null;
-};
 
-const CustomTooltip = (props: any) => {
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{ value: number; payload: { name: string } }>;
+}
+
+const CustomTooltip = (props: TooltipProps) => {
   const { active, payload } = props;
   if (active && payload && payload.length) {
     return (

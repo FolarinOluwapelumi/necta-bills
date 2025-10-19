@@ -12,9 +12,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed] = useState(false)
   const user = useCurrentUser()
-
   const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase() : "PD"
 
   return (

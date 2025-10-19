@@ -9,20 +9,20 @@ interface VerifyEmailFormProps {
   initialType?: string;
 }
 
-export default function VerifyEmailForm({ 
-  initialEmail, 
-  initialType 
+export default function VerifyEmailForm({
+  initialEmail,
+  initialType,
 }: VerifyEmailFormProps) {
   const router = useRouter();
   const [userEmail] = useState(initialEmail || "dominic@gmail.com");
   const [type] = useState(initialType || "");
-  
+
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [resendTime, setResendTime] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  
+
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   // Initialize refs array
@@ -42,7 +42,7 @@ export default function VerifyEmailForm({
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
-    
+
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
@@ -54,7 +54,7 @@ export default function VerifyEmailForm({
     }
 
     // Auto-submit when all digits are filled
-    if (newCode.every(digit => digit !== "") && index === 5) {
+    if (newCode.every((digit) => digit !== "") && index === 5) {
       handleVerify(newCode.join(""));
     }
   };
@@ -68,12 +68,12 @@ export default function VerifyEmailForm({
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').slice(0, 6);
+    const pastedData = e.clipboardData.getData("text").slice(0, 6);
     if (/^\d+$/.test(pastedData)) {
-      const newCode = pastedData.split('').slice(0, 6);
+      const newCode = pastedData.split("").slice(0, 6);
       const filledCode = [...newCode, ...Array(6 - newCode.length).fill("")];
       setCode(filledCode as string[]);
-      
+
       // Focus the last input
       const lastFilledIndex = Math.min(newCode.length - 1, 5);
       inputRefs.current[lastFilledIndex]?.focus();
@@ -82,7 +82,7 @@ export default function VerifyEmailForm({
 
   const handleVerify = async (verificationCode?: string) => {
     const verifyCode = verificationCode || code.join("");
-    
+
     if (verifyCode.length !== 6) {
       setError("Please enter the 6-digit verification code");
       return;
@@ -103,7 +103,11 @@ export default function VerifyEmailForm({
     if (result.success) {
       if (type === "password-reset") {
         // Redirect to update password page with token
-        router.push(`/auth/update-password?token=valid-reset-token&email=${encodeURIComponent(userEmail)}`);
+        router.push(
+          `/auth/update-password?token=valid-reset-token&email=${encodeURIComponent(
+            userEmail
+          )}`
+        );
       } else {
         router.push("/dashboard");
       }
@@ -114,17 +118,17 @@ export default function VerifyEmailForm({
 
   const handleResendCode = async () => {
     if (!canResend) return;
-    
+
     setLoading(true);
     setError("");
 
     // Simulate resend API call
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
     setLoading(false);
     setResendTime(30);
     setCanResend(false);
-    
+
     console.log(`Verification code resent to: ${userEmail}`);
   };
 
@@ -132,7 +136,9 @@ export default function VerifyEmailForm({
     <div className="space-y-6 max-w-md">
       {/* 6-Digit Code Input */}
       <div className="mb-8">
-        <label className="block text-sm font-medium text-black mb-4">6 - Digit Code</label>
+        <label className="block text-sm font-medium text-black mb-4">
+          6 - Digit Code
+        </label>
         <div className="flex gap-3 justify-between max-w-md">
           {code.map((digit, index) => (
             <input
@@ -156,11 +162,7 @@ export default function VerifyEmailForm({
       </div>
 
       {/* Error Message */}
-      {error && (
-        <div className="text-red-500 text-sm mb-4">
-          {error}
-        </div>
-      )}
+      {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
       {/* Verify Button */}
       <button
@@ -174,13 +176,13 @@ export default function VerifyEmailForm({
       {/* Resend Code */}
       <div className="text-center">
         <p className="text-gray-600">
-          Didn't Receive A Code?{" "}
+          Didn&apos;t Receive A Code?{" "}
           <button
             onClick={handleResendCode}
             disabled={!canResend || loading}
             className={`font-semibold ${
               canResend && !loading
-                ? "text-[#0E70FC] hover:underline cursor-pointer" 
+                ? "text-[#0E70FC] hover:underline cursor-pointer"
                 : "text-gray-400 cursor-not-allowed"
             }`}
           >

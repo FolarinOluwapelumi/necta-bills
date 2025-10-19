@@ -3,7 +3,6 @@ import Image from "next/image";
 import Illustration from "@/assets/illustration.png";
 import Icon2 from "@/assets/asset 3.png";
 
-
 export default function VerifyEmailPage({
   searchParams,
 }: {

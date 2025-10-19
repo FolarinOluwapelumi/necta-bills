@@ -54,7 +54,7 @@ export default function SignInPage({
 
         {/* Static footer */}
         <p className="text-sm text-center text-gray-600 mt-6">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a
             href="/auth/get-started"
             className="text-[#0E70FC] underline font-medium"
