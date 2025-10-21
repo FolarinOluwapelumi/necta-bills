@@ -22,7 +22,7 @@ export default function SentHistory() {
     {
       id: '1',
       title: 'Welcome to FinTech Platform',
-      description: 'Thank you for joining our platform. Complete your KYC to explore a variety of financial services including investment opportunities and budgeting tools.',
+      description: 'Thank you for joining our platform. Complete your KYC to',
       recipients: 'All New Users',
       type: 'Email',
       sentAt: '09/03/2025. 09:34PM',
@@ -96,7 +96,7 @@ export default function SentHistory() {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 TITLE

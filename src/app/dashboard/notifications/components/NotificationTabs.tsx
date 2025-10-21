@@ -18,7 +18,7 @@ export default function NotificationTabs({
   ];
 
   return (
-    <div className="border-b border-gray-200">
+    <div>
       <nav className="-mb-px flex space-x-8">
         {tabs.map((tab) => (
           <button

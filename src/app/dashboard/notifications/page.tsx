@@ -12,7 +12,7 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<NotificationTab>('compose');
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -28,7 +28,7 @@ export default function NotificationsPage() {
         <NotificationTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mt-6">
+        <div className="mt-4">
           {activeTab === 'compose' ? <ComposeMessage /> : <SentHistory />}
         </div>
       </div>
