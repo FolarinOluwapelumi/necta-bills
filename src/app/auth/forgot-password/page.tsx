@@ -21,19 +21,8 @@ export default function ForgotPasswordPage() {
           RESET PASSWORD
         </h1>
 
-        {/* Client Component for interactive form */}
+        {/* Client Component for interactive form - now includes the sign in link */}
         <ForgotPasswordForm />
-
-        {/* Static Back to Sign In Link */}
-        <p className="text-sm text-center text-gray-600 mt-6">
-          Remember your password?{" "}
-          <a
-            href="/auth/sign-in"
-            className="text-[#0E70FC] underline font-medium"
-          >
-            Sign In
-          </a>
-        </p>
       </div>
 
       {/* Right Side - Illustration (Static) */}

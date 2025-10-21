@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updatePassword } from "@/lib/auth";
+import { Eye, EyeOff} from "lucide-react";
+
 
 interface UpdatePasswordFormProps {
   initialToken?: string;
@@ -129,7 +131,11 @@ export default function UpdatePasswordForm({
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-0 top-3 text-gray-400 hover:text-gray-600"
           >
-            {showPassword ? "🙈" : "👁️"}
+            {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
           </button>
         </div>
       </div>
@@ -154,7 +160,11 @@ export default function UpdatePasswordForm({
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             className="absolute right-0 top-3 text-gray-400 hover:text-gray-600"
           >
-            {showConfirmPassword ? "🙈" : "👁️"}
+            {showConfirmPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
           </button>
         </div>
       </div>

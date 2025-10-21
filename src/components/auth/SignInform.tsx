@@ -18,7 +18,9 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
   const [error, setError] = useState("");
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [successMessageState, setSuccessMessageState] = useState(initialMessage || "");
+  const [successMessageState, setSuccessMessageState] = useState(
+    initialMessage || ""
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,6 +44,11 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
     } else {
       setError(result.message);
     }
+  };
+
+   const handleGetStartedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push("/auth/get-started");
   };
 
   return (
@@ -104,6 +111,20 @@ export default function SignInForm({ initialMessage }: SignInFormProps) {
         >
           Forgot Password?
         </button>
+      </div>
+
+      <div>
+        <div className="flex justify-center items-center text-gray-600 text-sm gap-2 mt-[-5]">
+          <p>Don&apos;t have an account?</p>
+          <button
+            type="button" // IMPORTANT: type="button" prevents form submission
+            onClick={handleGetStartedClick}
+            className="text-[#0E70FC] underline font-medium hover:text-[#0052CC] transition-colors hover:cursor-pointer"
+            disabled={loading}
+          >
+            Get Started
+          </button>
+        </div>
       </div>
     </form>
   );

@@ -80,7 +80,7 @@ export default function GetStartedPage() {
       ...prev,
       [name]: value,
     }));
-    // Clear erors when user types
+    // Clear errors when user types
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -105,6 +105,11 @@ export default function GetStartedPage() {
     }
   };
 
+  const handleSignInClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push("/auth/sign-in");
+  };
+
   const passwordStrength = getPasswordStrength(formData.password);
   const isPasswordValid = validatePassword(formData.password);
 
@@ -112,6 +117,7 @@ export default function GetStartedPage() {
     <div className="min-h-screen bg-white flex">
       {/* Left Side - Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-12 py-12">
+      
         {/* Icon */}
         <div className="mb-6 w-16 h-16 flex items-center justify-center">
           <Image
@@ -256,16 +262,19 @@ export default function GetStartedPage() {
             )}
           </Button>
 
-          {/* Sign In Link */}
-          <div className="flex justify-center text-gray-600 text-sm text-center">
-            <p>Already have an account? </p>
-            <button
-              onClick={() => router.push("/auth/sign-in")}
-              className="text-[#0E70FC] underline font-semibold hover:cursor-pointer"
-              disabled={loading}
-            >
-              Sign In
-            </button>
+          {/* Sign In Link - NOW INSIDE THE FORM BUT SEPARATED */}
+          <div className="border-t border-gray-100">
+            <div className="flex justify-center items-center text-gray-600 text-sm gap-2">
+              <p>Already have an account?</p>
+              <button
+                type="button"
+                onClick={handleSignInClick}
+                className="text-[#0E70FC] underline font-semibold hover:cursor-pointer hover:text-[#0052CC] transition-colors"
+                disabled={loading}
+              >
+                Sign In
+              </button>
+            </div>
           </div>
         </form>
       </div>

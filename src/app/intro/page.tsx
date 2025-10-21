@@ -52,7 +52,7 @@ export default function InvitationPage() {
             </Button>
           </div>
 
-          <div className="border-t pt-3 md:pt-6">
+          <div className="pt-3 md:pt-6">
             <p className="text-base text-[#5f80a0] mb-2">Best regards,</p>
             <p className="text-base text-black font-medium">
               Madvirus from NectaBills{" "}

@@ -31,11 +31,18 @@ export default function ForgotPasswordForm() {
     }
   };
 
+  const handleSignInClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
+    router.push("/auth/sign-in");
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md">
       {/* Email Address */}
       <div>
-        <label className="block text-sm font-medium text-black mb-2">Email Address</label>
+        <label className="block text-sm font-medium text-black mb-2">
+          Email Address
+        </label>
         <input
           type="email"
           value={email}
@@ -65,10 +72,24 @@ export default function ForgotPasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#0E70FC] hover:bg-[#0052CC] hover:cursor-pointer disabled:bg-gray-400 text-white py-4 text-base font-medium rounded-full mt-2 transition-colors"
+        className="w-full bg-[#0E70FC] hover:bg-[#0052CC] disabled:bg-gray-400 text-white py-4 text-base font-medium rounded-full mt-2 transition-colors"
       >
         {loading ? "Sending..." : "Reset Password"}
       </button>
+
+      <div>
+        <div className="flex justify-center items-center text-gray-600 text-sm gap-2">
+          <p>Remember your password?</p>
+          <button
+            type="button"
+            onClick={handleSignInClick}
+            className="text-[#0E70FC] underline font-medium hover:text-[#0052CC] transition-colors hover:cursor-pointer"
+            disabled={loading}
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
     </form>
   );
 }
