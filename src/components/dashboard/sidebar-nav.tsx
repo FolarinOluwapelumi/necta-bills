@@ -1,83 +1,3 @@
-// "use client"
-
-// import { useRouter } from "next/navigation"
-// import { LayoutDashboard, Bell, Headphones, Settings, Zap, Users, Shield, Wallet, CreditCard } from "lucide-react"
-
-// const navItems = [
-//   { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
-//   { icon: Bell, label: "Notifications", href: "/dashboard/notifications" },
-//   { icon: Headphones, label: "Support", href: "/dashboard/support" },
-//   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-//   { icon: Zap, label: "Feature Management", href: "/dashboard/features" },
-// ]
-
-// interface SidebarNavProps {
-//   currentPath: string
-//   isOpen: boolean
-// }
-
-// export function SidebarNav({ currentPath, isOpen }: SidebarNavProps) {
-//   const router = useRouter()
-
-//   const handleNavigation = (href: string) => {
-//     router.push(href)
-//   }
-
-//   return (
-//     <>
-//       {navItems.map((item) => (
-//         <SidebarNav.Item 
-//           key={item.label} 
-//           icon={item.icon.name} 
-//           label={item.label} 
-//           href={item.href}
-//           isActive={currentPath === item.href || (item.href === "/dashboard" && currentPath === "/dashboard")}
-//           isOpen={isOpen}
-//           onClick={() => handleNavigation(item.href)}
-//         />
-//       ))}
-//     </>
-//   )
-// }
-
-// interface ItemProps {
-//   icon: string
-//   label: string
-//   href: string
-//   isActive: boolean
-//   isOpen: boolean
-//   onClick: () => void
-// }
-
-// SidebarNav.Item = function Item({ icon, label, href, isActive, isOpen, onClick }: ItemProps) {
-//   const iconMap: Record<string, React.ReactNode> = {
-//     LayoutDashboard: <LayoutDashboard className="w-5 h-5" />,
-//     Bell: <Bell className="w-5 h-5" />,
-//     Headphones: <Headphones className="w-5 h-5" />,
-//     Settings: <Settings className="w-5 h-5" />,
-//     Zap: <Zap className="w-5 h-5" />,
-//     Users: <Users className="w-5 h-5" />,
-//     Shield: <Shield className="w-5 h-5" />,
-//     Wallet: <Wallet className="w-5 h-5" />,
-//     CreditCard: <CreditCard className="w-5 h-5" />,
-//   }
-
-//   return (
-//     <button 
-//       onClick={onClick}
-//       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-//         isActive 
-//           ? "bg-blue-50 text-blue-600 font-semibold" 
-//           : "text-gray-700 hover:bg-gray-100"
-//       }`}
-//     >
-//       <span className={isActive ? "text-blue-600" : "text-gray-600"}>
-//         {iconMap[icon]}
-//       </span>
-//       {isOpen && <span className="text-sm">{label}</span>}
-//     </button>
-//   )
-// }
 
 // src/app/dashboard/sidebar-nav.tsx
 "use client"
@@ -151,7 +71,6 @@ const IconComponent = ({ name, className }: { name: string; className: string })
     Bell: <Bell className={className} />,
     Headphones: <Headphones className={className} />,
     Settings: <Settings className={className} />,
-    Zap: <Zap className={className} />,
     Users: <Users className={className} />,
     Shield: <Shield className={className} />,
     Wallet: <Wallet className={className} />,

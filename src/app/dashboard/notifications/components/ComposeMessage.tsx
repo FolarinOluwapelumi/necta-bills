@@ -83,7 +83,7 @@ export default function ComposeMessage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* Left Section - Notification Content (Flexible Height) */}
-          <div className="bg-gray-50 rounded-xl p-6 space-y-6 border border-gray-100 min-h-[400px] h-fit">
+          <div className="bg-gray-50 rounded-xl p-6 space-y-4 border border-gray-100 min-h-[400px] h-fit">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-2">
                 Notification Content
@@ -93,7 +93,7 @@ export default function ComposeMessage() {
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-1">
               {/* Title Input */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
@@ -104,13 +104,13 @@ export default function ComposeMessage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter notification title"
-                  className="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-base placeholder-gray-400"
+                  className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-base placeholder-gray-400"
                   required
                 />
               </div>
 
               {/* Message Input with Flexible Height */}
-              <div className="space-y-2">
+              <div className='pt-2 '>
                 <label className="block text-sm font-medium text-gray-700">
                   Message*
                 </label>
@@ -121,10 +121,10 @@ export default function ComposeMessage() {
                     placeholder="Write your message here..."
                     rows={4}
                     maxLength={500}
-                    className="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 resize-none transition-colors duration-200 text-base placeholder-gray-400 min-h-[120px]"
+                    className="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 resize-none transition-colors duration-200 text-base placeholder-gray-400 min-h-[100px]"
                     style={{ 
                       height: 'auto',
-                      minHeight: '120px',
+                      minHeight: '100px',
                       resize: 'vertical'
                     }}
                     onInput={(e) => {
@@ -146,11 +146,11 @@ export default function ComposeMessage() {
               </div>
 
               {/* Send Button at Bottom */}
-              <div className="pt-6">
+              <div>
                 <button
                   type="submit"
                   disabled={!isFormValid}
-                  className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="w-fit px-6 py-1 bg-blue-600 text-white font-medium rounded-4xl hover:bg-blue-700 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Send Now
                 </button>
@@ -232,10 +232,10 @@ export default function ComposeMessage() {
                 {recipientGroups.map((group) => (
                   <label
                     key={group.id}
-                    className={`flex items-start space-x-3 cursor-pointer p-3 rounded-lg border transition-all duration-200 ${
+                    className={`flex items-start space-x-3 cursor-pointer p-3 transition-all duration-200 ${
                       selectedRecipients.includes(group.id)
                         ? 'border-blue-500 bg-blue-50 shadow-sm'
-                        : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-25'
+                        : ' hover:border-blue-300 hover:bg-blue-25'
                     }`}
                   >
                     <input
@@ -245,7 +245,7 @@ export default function ComposeMessage() {
                       className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-bold text-gray-900">
                         {group.label}
                       </p>
                       <p className="text-sm text-gray-500">

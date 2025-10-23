@@ -53,7 +53,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     }
   }, [isOpen, isMounted])
 
-  // Don't render sidebar during SSR to prevent hydration issues
+  // Remember not to render sidebar during SSR to prevent hydration issues
   if (!isMounted) {
     return null
   }
@@ -93,7 +93,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         {/* Logo */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
               S
@@ -150,18 +150,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               isActive={pathname === "/dashboard/transactions"}
               isOpen={true}
               onClick={() => handleNavigation("/dashboard/transactions")}
-            />
-          </SidebarSection>
-
-          {/* SYSTEM Section */}
-          <SidebarSection title="SYSTEM" isOpen={true}>
-            <SidebarNav.Item 
-              icon="Zap" 
-              label="Feature Management" 
-              href="/dashboard/features"
-              isActive={pathname === "/dashboard/features"}
-              isOpen={true}
-              onClick={() => handleNavigation("/dashboard/features")}
             />
           </SidebarSection>
         </nav>
@@ -257,17 +245,6 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
             isActive={pathname === "/dashboard/transactions"}
             isOpen={!isCollapsed}
             onClick={() => handleNavigation("/dashboard/transactions")}
-          />
-        </SidebarSection>
-
-        <SidebarSection title="SYSTEM" isOpen={!isCollapsed}>
-          <SidebarNav.Item 
-            icon="Zap" 
-            label="Feature Management" 
-            href="/dashboard/features"
-            isActive={pathname === "/dashboard/features"}
-            isOpen={!isCollapsed}
-            onClick={() => handleNavigation("/dashboard/features")}
           />
         </SidebarSection>
       </nav>

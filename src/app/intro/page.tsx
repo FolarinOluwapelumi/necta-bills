@@ -45,7 +45,7 @@ export default function InvitationPage() {
             <Button
               size="lg"
               onClick={handleJoinWorkspace}
-              className="bg-[#0E70FC] hover:bg-[#0052CC] text-white px-8 py-6 text-base md:text-lg font-medium rounded-full flex items-center gap-3"
+              className="bg-[#0E70FC] hover:bg-[#0052CC] hover:cursor-pointer text-white px-8 py-6 text-base md:text-lg font-medium rounded-full flex items-center gap-3"
             >
               <UserPlus className="h-5 w-5" />
               Join Workspace
