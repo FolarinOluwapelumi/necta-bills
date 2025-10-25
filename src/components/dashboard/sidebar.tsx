@@ -1,11 +1,10 @@
-// src/app/dashboard/sidebar.tsx
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { SidebarNav } from "./sidebar-nav"
 import { SidebarSection } from "./sidebar-section"
-import { X } from "lucide-react"
+import { X, Users, Shield, Wallet, CreditCard } from "lucide-react"
 import { mockUser } from "@/lib/data/mock-data"
 
 interface SidebarProps {
@@ -16,167 +15,221 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [isCollapsed] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+  const sidebarRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const router = useRouter()
   
   const initials = `${mockUser.firstName.charAt(0)}${mockUser.lastName.charAt(0)}`.toUpperCase()
 
-  // Set mounted state to prevent hydration issues
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  // Close sidebar on route change (mobile) - Fixed version
+  // Close sidebar when route changes
   useEffect(() => {
     if (isOpen && isMounted) {
-      console.log('Route changed, closing sidebar')
-      onClose()
+      handleClose()
     }
-  }, [pathname, isMounted]) // Remove onClose from dependencies
+  }, [pathname])
+
+  // Handle outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current && 
+        !sidebarRef.current.contains(event.target as Node) &&
+        isOpen
+      ) {
+        handleClose()
+      }
+    }
+
+    // Handle escape key
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        handleClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscapeKey)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscapeKey)
+    }
+  }, [isOpen])
+
+  // Smooth close function
+  const handleClose = useCallback(() => {
+    setIsClosing(true)
+    // Wait for animation to complete before actually closing
+    setTimeout(() => {
+      onClose()
+      setIsClosing(false)
+    }, 300) // Match this with your CSS transition duration
+  }, [onClose])
 
   const handleNavigation = (href: string) => {
-    console.log('Navigating to:', href)
     router.push(href)
-    // Let the useEffect above handle closing the sidebar
   }
 
-  // Prevent body scroll when sidebar is open
+  // Body scroll lock and blur effect
   useEffect(() => {
     if (isMounted && isOpen) {
       document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      // Add blur class to main content
+      document.getElementById('main-content')?.classList.add('backdrop-blur-sm')
     } else {
       document.body.style.overflow = 'unset'
+      document.body.style.position = 'static'
+      document.body.style.width = 'auto'
+      // Remove blur class from main content
+      document.getElementById('main-content')?.classList.remove('backdrop-blur-sm')
     }
 
     return () => {
       document.body.style.overflow = 'unset'
+      document.body.style.position = 'static'
+      document.body.style.width = 'auto'
+      document.getElementById('main-content')?.classList.remove('backdrop-blur-sm')
     }
   }, [isOpen, isMounted])
 
-  // Remember not to render sidebar during SSR to prevent hydration issues
   if (!isMounted) {
     return null
   }
 
   return (
     <>
-      {/* Mobile Overlay - Higher z-index */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-opacity-50 z-40 md:hidden"
-          onClick={onClose}
-          style={{ backdropFilter: 'blur(2px)' }}
+          className="fixed inset-0 bg-opacity-40 z-40 md:hidden transition-opacity duration-300"
+          onClick={handleClose}
+          style={{ 
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)'
+          }}
         />
       )}
 
-      {/* Mobile Drawer - Even higher z-index */}
-      <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-300 z-50 md:hidden ${
-          isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
-        }`}
-        style={{ 
-          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-          willChange: 'transform'
-        }}
-      >
-        {/* Close Button */}
-        <div className="p-4 flex justify-end border-b border-gray-200">
-          <button 
-            onClick={(e) => {
-              e.stopPropagation()
-              onClose()
-            }} 
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Logo */}
-        <div className="px-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              S
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 text-sm">NectaBills</p>
-              <p className="text-xs text-gray-500">Admin</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav 
-          className="flex-1 overflow-y-auto p-4 space-y-2"
-          onClick={(e) => e.stopPropagation()} // Prevent overlay close when clicking inside
+      {/* Mobile Drawer with Enhanced Animations */}
+      <div className={`fixed inset-0 z-50 md:hidden ${isOpen ? 'block' : 'hidden'}`}>
+        <div
+          ref={sidebarRef}
+          className={`fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex flex-col transform transition-all duration-300 ease-out ${
+            isOpen && !isClosing 
+              ? "translate-x-0 opacity-100" 
+              : "-translate-x-full opacity-0"
+          }`}
+          style={{
+            boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)',
+            willChange: 'transform, opacity'
+          }}
         >
-          {/* Main Navigation Items */}
-          <SidebarNav currentPath={pathname} isOpen={true} />
-          
-          {/* USER MANAGEMENT Section */}
-          <SidebarSection title="USER MANAGEMENT" isOpen={true}>
-            <SidebarNav.Item 
-              icon="Users" 
-              label="Customers" 
-              href="/dashboard/customers"
-              isActive={pathname === "/dashboard/customers"}
-              isOpen={true}
-              onClick={() => handleNavigation("/dashboard/customers")}
-            />
-            <SidebarNav.Item 
-              icon="Shield" 
-              label="KYC Verification" 
-              href="/dashboard/kyc"
-              isActive={pathname === "/dashboard/kyc"}
-              isOpen={true}
-              onClick={() => handleNavigation("/dashboard/kyc")}
-            />
-          </SidebarSection>
-          
-          {/* WALLET & TRANSACTIONS Section */}
-          <SidebarSection title="WALLET & TRANSACTIONS" isOpen={true}>
-            <SidebarNav.Item 
-              icon="Wallet" 
-              label="Wallet Overview" 
-              href="/dashboard/wallet"
-              isActive={pathname === "/dashboard/wallet"}
-              isOpen={true}
-              onClick={() => handleNavigation("/dashboard/wallet")}
-            />
-            <SidebarNav.Item 
-              icon="CreditCard" 
-              label="Transactions" 
-              href="/dashboard/transactions"
-              isActive={pathname === "/dashboard/transactions"}
-              isOpen={true}
-              onClick={() => handleNavigation("/dashboard/transactions")}
-            />
-          </SidebarSection>
-        </nav>
+          {/* Close Button with Animation */}
+          <div className="p-2 flex justify-end border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+            <button 
+              onClick={handleClose}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
+            >
+              <X className="w-5 h-5 transition-transform duration-200 hover:rotate-90" />
+            </button>
+          </div>
 
-        {/* User Profile */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors duration-200">
-            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
-              {initials}
+          {/* Logo with Fade-in Effect */}
+          <div className="px-6 py-4 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-lg transition-transform duration-300 hover:scale-105">
+                S
+              </div>
+              <div className="transition-all duration-500 delay-100">
+                <p className="font-semibold text-gray-900 text-sm">NectaBills</p>
+                <p className="text-xs text-gray-500">Admin</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
-                {mockUser.firstName} {mockUser.lastName}
-              </p>
-              <p className="text-xs text-gray-500 truncate">{mockUser.email}</p>
+          </div>
+
+          {/* Navigation with Staggered Animation */}
+          <nav 
+            className="flex-1 overflow-y-auto p-4 space-y-2 bg-white/90 backdrop-blur-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="space-y-2">
+              <SidebarNav currentPath={pathname} isOpen={true} />
+            </div>
+            
+            <SidebarSection title="USER MANAGEMENT" isOpen={true}>
+              <SidebarNav.Item 
+                icon={Users}
+                label="Customers" 
+                href="/dashboard/customers"
+                isActive={pathname === "/dashboard/customers"}
+                isOpen={true}
+                onClick={() => handleNavigation("/dashboard/customers")}
+              />
+              <SidebarNav.Item 
+                icon={Shield}
+                label="KYC Verification" 
+                href="/dashboard/kyc"
+                isActive={pathname === "/dashboard/kyc"}
+                isOpen={true}
+                onClick={() => handleNavigation("/dashboard/kyc")}
+              />
+            </SidebarSection>
+            
+            <SidebarSection title="WALLET & TRANSACTIONS" isOpen={true}>
+              <SidebarNav.Item 
+                icon={Wallet}
+                label="Wallet Overview" 
+                href="/dashboard/wallet"
+                isActive={pathname === "/dashboard/wallet"}
+                isOpen={true}
+                onClick={() => handleNavigation("/dashboard/wallet")}
+              />
+              <SidebarNav.Item 
+                icon={CreditCard}
+                label="Transactions" 
+                href="/dashboard/transactions"
+                isActive={pathname === "/dashboard/transactions"}
+                isOpen={true}
+                onClick={() => handleNavigation("/dashboard/transactions")}
+              />
+            </SidebarSection>
+          </nav>
+
+          {/* User Profile with Hover Animation */}
+          <div className="p-4 border-t border-gray-200 bg-white/95 backdrop-blur-sm">
+            <div 
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-100"
+              onClick={handleClose}
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg transition-transform duration-300 hover:scale-110">
+                {initials}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {mockUser.firstName} {mockUser.lastName}
+                </p>
+                <p className="text-xs text-gray-500 truncate">{mockUser.email}</p>
+              </div>
             </div>
           </div>
         </div>
-      </aside>
+      </div>
 
-      {/* Desktop Sidebar - Separate component */}
+      {/* Desktop Sidebar */}
       <DesktopSidebar isCollapsed={isCollapsed} pathname={pathname} />
     </>
   )
 }
 
-// Separate desktop sidebar to avoid mobile issues
+// Enhanced DesktopSidebar with subtle animations
 function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathname: string }) {
   const router = useRouter()
   const initials = `${mockUser.firstName.charAt(0)}${mockUser.lastName.charAt(0)}`.toUpperCase()
@@ -189,16 +242,19 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
     <aside
       className={`hidden md:flex ${
         isCollapsed ? "w-20" : "w-64"
-      } bg-white border-r border-gray-200 flex-col transition-all duration-300`}
+      } bg-white border-r border-gray-200 flex-col transition-all duration-500 ease-in-out`}
+      style={{
+        boxShadow: '2px 0 10px rgba(0, 0, 0, 0.05)'
+      }}
     >
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold">
+          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg transition-transform duration-300 hover:scale-105">
             S
           </div>
           {!isCollapsed && (
-            <div className="transition-opacity duration-300">
+            <div className="transition-all duration-500 ease-out">
               <p className="font-semibold text-gray-900">NectaBills</p>
               <p className="text-xs text-gray-500">Admin</p>
             </div>
@@ -212,7 +268,7 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
         
         <SidebarSection title="USER MANAGEMENT" isOpen={!isCollapsed}>
           <SidebarNav.Item 
-            icon="Users" 
+            icon={Users}
             label="Customers" 
             href="/dashboard/customers"
             isActive={pathname === "/dashboard/customers"}
@@ -220,7 +276,7 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
             onClick={() => handleNavigation("/dashboard/customers")}
           />
           <SidebarNav.Item 
-            icon="Shield" 
+            icon={Shield}
             label="KYC Verification" 
             href="/dashboard/kyc"
             isActive={pathname === "/dashboard/kyc"}
@@ -231,7 +287,7 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
         
         <SidebarSection title="WALLET & TRANSACTIONS" isOpen={!isCollapsed}>
           <SidebarNav.Item 
-            icon="Wallet" 
+            icon={Wallet}
             label="Wallet Overview" 
             href="/dashboard/wallet"
             isActive={pathname === "/dashboard/wallet"}
@@ -239,7 +295,7 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
             onClick={() => handleNavigation("/dashboard/wallet")}
           />
           <SidebarNav.Item 
-            icon="CreditCard" 
+            icon={CreditCard}
             label="Transactions" 
             href="/dashboard/transactions"
             isActive={pathname === "/dashboard/transactions"}
@@ -251,12 +307,12 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
 
       {/* User Profile */}
       <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors duration-200">
-          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+        <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300 hover:shadow-md">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-transform duration-300 hover:scale-110">
             {initials}
           </div>
           {!isCollapsed && (
-            <div className="flex-1 min-w-0 transition-opacity duration-300">
+            <div className="flex-1 min-w-0 transition-all duration-500 ease-out">
               <p className="text-sm font-medium text-gray-900 truncate">
                 {mockUser.firstName} {mockUser.lastName}
               </p>

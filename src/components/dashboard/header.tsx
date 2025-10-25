@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Download, Home, Menu, Settings, Bell, Headphones, Zap, Users, Shield, Wallet, CreditCard } from "lucide-react"
+import { Search, Download, Home, Menu, Settings, Bell, Headphones, Zap, Users, Shield, Wallet, CreditCard, LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -11,7 +11,7 @@ interface HeaderProps {
 
 interface PageConfig {
   title: string;
-  icon: any;
+  icon: LucideIcon;
   breadcrumb?: string;
 }
 
@@ -27,7 +27,6 @@ const pageConfig: Record<string, PageConfig> = {
   "/dashboard/wallet": { title: "Wallet Overview", icon: Wallet },
   "/dashboard/transactions": { title: "Transactions", icon: CreditCard },
   
-  // Settings sub-pages - EXACT FORMAT YOU WANT
   "/dashboard/settings/personal-details": { 
     title: "Settings / Personal Details", 
     icon: Settings,
@@ -68,7 +67,7 @@ export function Header({ onMenuClick }: HeaderProps) {
     let config = pageConfig[pathname];
     
     if (!config) {
-      // For dynamic routes, create the exact breadcrumb format you want
+      // For dynamic routes, this is the breadcrumbs
       const segments = pathname.split('/').filter(Boolean);
       if (segments.length >= 3 && segments[1] === 'settings') {
         const pageTitle = segments[2].split('-').map(word => 
@@ -105,7 +104,6 @@ export function Header({ onMenuClick }: HeaderProps) {
             </div>
             
             <div>
-              {/* Single line with the exact format you want */}
               <h1 className="text-sm md:text-lg font-medium text-gray-900">
                 {currentPage.breadcrumb || currentPage.title}
               </h1>

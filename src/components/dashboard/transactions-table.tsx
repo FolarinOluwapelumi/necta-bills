@@ -8,8 +8,46 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { mockTransactions } from "@/lib/data/mock-data";
-// import type { Transaction } from "@/lib/types/dashboard"
+
+// FIXED: Define Transaction interface locally instead of importing
+interface Transaction {
+  id: string;
+  user: string;
+  email: string;
+  transactionId: string;
+  type: "Deposit" | "Transfer" | "Airtime" | "Airline";
+  amount: string;
+  date: string;
+  time: string;
+  status: "SUCCESSFUL" | "PENDING";
+}
+
+// FIXED: Define mock data locally
+const mockTransactions: Transaction[] = [
+  {
+    id: "1",
+    user: "John Doe",
+    email: "john@example.com",
+    transactionId: "TX123456",
+    type: "Deposit",
+    amount: "$1,250.00",
+    date: "09/03/2025",
+    time: "09:34 AM",
+    status: "SUCCESSFUL"
+  },
+  {
+    id: "2", 
+    user: "Sarah Wilson",
+    email: "sarah@example.com",
+    transactionId: "TX123457",
+    type: "Transfer",
+    amount: "$350.00",
+    date: "09/03/2025",
+    time: "10:15 AM", 
+    status: "PENDING"
+  },
+  // Add more mock data as needed
+];
 
 export function TransactionsTable() {
   const [activeTab, setActiveTab] = useState<"new-users" | "transactions">(
@@ -120,7 +158,7 @@ export function TransactionsTable() {
             </tr>
           </thead>
           <tbody>
-            {mockTransactions.map((tx, index) => (
+            {mockTransactions.map((tx) => ( // FIXED: Removed unused 'index' parameter
               <tr
                 key={tx.id}
                 className="border-b border-gray-200 hover:bg-gray-50 transition-all duration-200"

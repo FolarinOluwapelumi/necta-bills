@@ -1,5 +1,3 @@
-
-// src/app/dashboard/sidebar-nav.tsx
 "use client"
 
 import { useRouter } from "next/navigation"
@@ -9,10 +7,7 @@ import {
   Headphones, 
   Settings, 
   Zap, 
-  Users, 
-  Shield, 
-  Wallet, 
-  CreditCard 
+  LucideIcon
 } from "lucide-react"
 
 const navItems = [
@@ -40,7 +35,7 @@ export function SidebarNav({ currentPath, isOpen }: SidebarNavProps) {
       {navItems.map((item) => (
         <SidebarNav.Item 
           key={item.label} 
-          icon={item.icon.name} 
+          icon={item.icon}
           label={item.label} 
           href={item.href}
           isActive={
@@ -56,7 +51,7 @@ export function SidebarNav({ currentPath, isOpen }: SidebarNavProps) {
 }
 
 interface ItemProps {
-  icon: string
+  icon: LucideIcon 
   label: string
   href: string
   isActive: boolean
@@ -64,23 +59,7 @@ interface ItemProps {
   onClick: () => void
 }
 
-// Icon component mapping
-const IconComponent = ({ name, className }: { name: string; className: string }) => {
-  const iconMap = {
-    LayoutDashboard: <LayoutDashboard className={className} />,
-    Bell: <Bell className={className} />,
-    Headphones: <Headphones className={className} />,
-    Settings: <Settings className={className} />,
-    Users: <Users className={className} />,
-    Shield: <Shield className={className} />,
-    Wallet: <Wallet className={className} />,
-    CreditCard: <CreditCard className={className} />,
-  }
-  
-  return iconMap[name as keyof typeof iconMap] || <LayoutDashboard className={className} />
-}
-
-SidebarNav.Item = function Item({ icon, label, href, isActive, isOpen, onClick }: ItemProps) {
+SidebarNav.Item = function Item({ icon: IconComponent, label, isActive, isOpen, onClick }: ItemProps) {
   return (
     <button 
       onClick={onClick}
@@ -91,7 +70,7 @@ SidebarNav.Item = function Item({ icon, label, href, isActive, isOpen, onClick }
       }`}
     >
       <span className={isActive ? "text-blue-600" : "text-gray-600"}>
-        <IconComponent name={icon} className="w-5 h-5" />
+        <IconComponent className="w-5 h-5" /> 
       </span>
       {isOpen && <span className="text-sm">{label}</span>}
     </button>

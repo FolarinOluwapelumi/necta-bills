@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from "react";
@@ -134,53 +133,53 @@ export function CustomersChart() {
         </div>
       </div>
 
-    <div className="w-full">
-  <ResponsiveContainer width="100%" height={200} className="md:h-80">
-    <AreaChart
-      data={chartData}
-      margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
-    >
-      <defs>
-        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#0066FF" stopOpacity={0.3} />
-          <stop offset="95%" stopColor="#0066FF" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <CartesianGrid
-        strokeDasharray="3 3"
-        stroke="#f0f0f0"
-        vertical={false}
-      />
-      <XAxis
-        dataKey="name"
-        axisLine={false}
-        tickLine={false}
-        tick={false}
-        padding={{ left: 0, right: 0 }}
-      />
-      <YAxis 
-        axisLine={false}
-        tickLine={false}
-        tick={false}
-        width={0}
-        padding={{ top: 0, bottom: 0 }}
-      />
-      <Tooltip content={<CustomTooltip />} />
-      <Area
-        type="monotone"
-        dataKey="value"
-        stroke="#0066FF"
-        strokeWidth={2.5}
-        fill="url(#colorValue)"
-        dot={false}
-        activeDot={{ r: 6, fill: "#0066FF", stroke: "#fff", strokeWidth: 2 }}
-      />
-    </AreaChart>
-  </ResponsiveContainer>
-</div>
+      <div className="w-full">
+        <ResponsiveContainer width="100%" height={200} className="md:h-80">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#0066FF" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#0066FF" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#f0f0f0"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={false}
+              padding={{ left: 0, right: 0 }}
+            />
+            <YAxis 
+              axisLine={false}
+              tickLine={false}
+              tick={false}
+              width={0}
+              padding={{ top: 0, bottom: 0 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke="#0066FF"
+              strokeWidth={2.5}
+              fill="url(#colorValue)"
+              dot={false}
+              activeDot={{ r: 6, fill: "#0066FF", stroke: "#fff", strokeWidth: 2 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
 
       <div className="flex gap-2 w-full justify-evenly md:justify-between flex-wrap">
-        {timePeriods.map((period, index) => (
+        {timePeriods.map((period) => ( // FIXED: Removed unused 'index' parameter
           <button
             key={period}
             onClick={() => setSelectedPeriod(period)}

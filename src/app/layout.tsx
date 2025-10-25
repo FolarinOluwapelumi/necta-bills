@@ -5,9 +5,7 @@ import './globals.css';
 
 const outfit = Outfit({
   subsets: ['latin'],
-  // Define a CSS variable name
   variable: '--font-outfit',
-  // Request all weights, or a specific range
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
