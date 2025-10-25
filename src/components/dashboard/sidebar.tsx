@@ -229,7 +229,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   )
 }
 
-// Enhanced DesktopSidebar with subtle animations
+// DesktopSidebar 
 function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathname: string }) {
   const router = useRouter()
   const initials = `${mockUser.firstName.charAt(0)}${mockUser.lastName.charAt(0)}`.toUpperCase()
@@ -248,8 +248,8 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
       }}
     >
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3">
+      <div className="py-3 px-6 pt-3 border-b border-gray-200">
+        <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg transition-transform duration-300 hover:scale-105">
             S
           </div>
