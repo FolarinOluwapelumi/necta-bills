@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from 'next/font/google';
-import './globals.css'; 
+import './globals.css';
+import { CustomerProvider } from '@/contexts/CustomerContext'; 
 
 
 const outfit = Outfit({
@@ -23,7 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={outfit.className}>
-      <body>{children}</body>
+      <body>
+      <CustomerProvider> {/* ADD THIS */}
+          {children}
+        </CustomerProvider>
+      </body>
     </html>
   );
 }

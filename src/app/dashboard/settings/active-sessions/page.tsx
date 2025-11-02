@@ -76,11 +76,8 @@ export default function ActiveSessionsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
   const [dateFilter, setDateFilter] = useState<string>("")
   const [showStatusDropdown, setShowStatusDropdown] = useState(false)
-  const [showDatePicker, setShowDatePicker] = useState(false)
   
   const dateInputRef = useRef<HTMLInputElement>(null)
-
-  const totalRows = 70
 
   // Filter sessions based on selected filters
   const filteredSessions = mockSessions.filter(session => {
@@ -114,7 +111,6 @@ export default function ActiveSessionsPage() {
 
   const handleDateFilter = (date: string) => {
     setDateFilter(date)
-    setShowDatePicker(false)
     setCurrentPage(1)
   }
 

@@ -1,12 +1,27 @@
-"use client"
+"use client";
 
-import { Search, Download, Home, Menu, Settings, Bell, Headphones, Zap, Users, Shield, Wallet, CreditCard, LucideIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import {
+  Search,
+  Download,
+  Home,
+  Menu,
+  Settings,
+  Bell,
+  Headphones,
+  Zap,
+  Users,
+  Shield,
+  Wallet,
+  CreditCard,
+  LucideIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useCustomer } from "@/contexts/CustomerContext";
 
 interface HeaderProps {
-  onMenuClick: () => void
+  onMenuClick: () => void;
 }
 
 interface PageConfig {
@@ -23,67 +38,86 @@ const pageConfig: Record<string, PageConfig> = {
   "/dashboard/settings": { title: "Settings", icon: Settings },
   "/dashboard/features": { title: "Feature Management", icon: Zap },
   "/dashboard/customers": { title: "Customers", icon: Users },
-  "/dashboard/kyc": { title: "KYC Verification", icon: Shield },
+  "/dashboard/kyc-verification": { title: "KYC Verification", icon: Shield },
   "/dashboard/wallet": { title: "Wallet Overview", icon: Wallet },
   "/dashboard/transactions": { title: "Transactions", icon: CreditCard },
-  
-  "/dashboard/settings/personal-details": { 
-    title: "Settings / Personal Details", 
+
+  "/dashboard/settings/personal-details": {
+    title: "Settings / Personal Details",
     icon: Settings,
-    breadcrumb: "Settings / Personal Details"
+    breadcrumb: "Settings / Personal Details",
   },
-  "/dashboard/settings/notifications": { 
-    title: "Settings / Notifications", 
+  "/dashboard/settings/notifications": {
+    title: "Settings / Notifications",
     icon: Settings,
-    breadcrumb: "Settings / Notifications"
+    breadcrumb: "Settings / Notifications",
   },
-  "/dashboard/settings/signin-security": { 
-    title: "Settings / Sign In & Security", 
+  "/dashboard/settings/signin-security": {
+    title: "Settings / Sign In & Security",
     icon: Settings,
-    breadcrumb: "Settings / Sign In & Security"
+    breadcrumb: "Settings / Sign In & Security",
   },
-  "/dashboard/settings/active-sessions": { 
-    title: "Settings / Active Sessions", 
+  "/dashboard/settings/active-sessions": {
+    title: "Settings / Active Sessions",
     icon: Settings,
-    breadcrumb: "Settings / Active Sessions"
+    breadcrumb: "Settings / Active Sessions",
   },
-  "/dashboard/settings/role-management": { 
-    title: "Settings / Role Management", 
+  "/dashboard/settings/role-management": {
+    title: "Settings / Role Management",
     icon: Settings,
-    breadcrumb: "Settings / Role Management"
+    breadcrumb: "Settings / Role Management",
   },
-  "/dashboard/settings/admin-management": { 
-    title: "Settings / Admin Management", 
+  "/dashboard/settings/admin-management": {
+    title: "Settings / Admin Management",
     icon: Settings,
-    breadcrumb: "Settings / Admin Management"
+    breadcrumb: "Settings / Admin Management",
   },
 };
 
 export function Header({ onMenuClick }: HeaderProps) {
   const pathname = usePathname();
-  const [currentPage, setCurrentPage] = useState<PageConfig>({ title: "Overview", icon: Home });
+  const [currentPage, setCurrentPage] = useState<PageConfig>({
+    title: "Overview",
+    icon: Home,
+  });
+  const { customerName } = useCustomer();
 
   useEffect(() => {
     let config = pageConfig[pathname];
-    
+
     if (!config) {
-      // For dynamic routes, this is the breadcrumbs
-      const segments = pathname.split('/').filter(Boolean);
-      if (segments.length >= 3 && segments[1] === 'settings') {
-        const pageTitle = segments[2].split('-').map(word => 
-          word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-        
+      // For dynamic routes like /dashboard/customers/[id]
+      const segments = pathname.split("/").filter(Boolean);
+
+      // Handle customer profile pages
+      if (segments.length >= 3 && segments[1] === "customers") {
+        config = {
+          title: customerName
+            ? `Customers / ${customerName}`
+            : "Customer Profile",
+          icon: Users,
+          breadcrumb: customerName
+            ? `Customers / ${customerName}`
+            : "Customers / Customer Profile",
+        };
+      }
+      // Handle settings pages
+      else if (segments.length >= 3 && segments[1] === "settings") {
+        const pageTitle = segments[2]
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+
         config = {
           title: `Settings / ${pageTitle}`,
           icon: Settings,
-          breadcrumb: `Settings / ${pageTitle}`
+          breadcrumb: `Settings / ${pageTitle}`,
         };
       }
     }
-    
+
     setCurrentPage(config || { title: "Overview", icon: Home });
-  }, [pathname]);
+  }, [pathname, customerName]);
 
   const IconComponent = currentPage.icon;
 
@@ -97,12 +131,12 @@ export function Header({ onMenuClick }: HeaderProps) {
           >
             <Menu className="w-5 h-5 text-gray-600" />
           </button>
-          
+
           <div className="flex items-center gap-1 sm:gap-3">
-            <div className="w-5 h-5 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center">
               <IconComponent className="w-4 h-4 text-white" />
             </div>
-            
+
             <div>
               <h1 className="text-sm md:text-lg font-medium text-gray-900">
                 {currentPage.breadcrumb || currentPage.title}

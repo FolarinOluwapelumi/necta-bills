@@ -26,14 +26,24 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     setIsMounted(true)
   }, [])
 
+  // Smooth close function
+  const handleClose = useCallback(() => {
+    setIsClosing(true)
+    // Wait for animation to complete before actually closing
+    setTimeout(() => {
+      onClose()
+      setIsClosing(false)
+    }, 300) // Match this with your CSS transition duration
+  }, [onClose])
+
   // Close sidebar when route changes
   useEffect(() => {
     if (isOpen && isMounted) {
       handleClose()
     }
-  }, [pathname])
+  }, [pathname, isOpen, isMounted, handleClose]) // Added missing dependencies
 
-  // Handle outside click
+  // Handle outside click and escape key
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -45,7 +55,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       }
     }
 
-    // Handle escape key
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
         handleClose()
@@ -61,17 +70,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('keydown', handleEscapeKey)
     }
-  }, [isOpen])
-
-  // Smooth close function
-  const handleClose = useCallback(() => {
-    setIsClosing(true)
-    // Wait for animation to complete before actually closing
-    setTimeout(() => {
-      onClose()
-      setIsClosing(false)
-    }, 300) // Match this with your CSS transition duration
-  }, [onClose])
+  }, [isOpen, handleClose]) // Added missing dependencies
 
   const handleNavigation = (href: string) => {
     router.push(href)
@@ -176,10 +175,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <SidebarNav.Item 
                 icon={Shield}
                 label="KYC Verification" 
-                href="/dashboard/kyc"
-                isActive={pathname === "/dashboard/kyc"}
+                href="/dashboard/kyc-verification"
+                isActive={pathname === "/dashboard/kyc-verification"}
                 isOpen={true}
-                onClick={() => handleNavigation("/dashboard/kyc")}
+                onClick={() => handleNavigation("/dashboard/kyc-verification")}
               />
             </SidebarSection>
             
@@ -222,8 +221,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
         </div>
       </div>
-
-      {/* Desktop Sidebar */}
       <DesktopSidebar isCollapsed={isCollapsed} pathname={pathname} />
     </>
   )
@@ -278,10 +275,10 @@ function DesktopSidebar({ isCollapsed, pathname }: { isCollapsed: boolean; pathn
           <SidebarNav.Item 
             icon={Shield}
             label="KYC Verification" 
-            href="/dashboard/kyc"
-            isActive={pathname === "/dashboard/kyc"}
+            href="/dashboard/kyc-verification"
+            isActive={pathname === "/dashboard/kyc-verification"}
             isOpen={!isCollapsed}
-            onClick={() => handleNavigation("/dashboard/kyc")}
+            onClick={() => handleNavigation("/dashboard/kyc-verification")}
           />
         </SidebarSection>
         
