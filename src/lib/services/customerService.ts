@@ -348,6 +348,9 @@ const mockStats: CustomerStats = {
   restricted_customers: 3,
 };
 
+
+
+
 export class CustomerService {
   static async getCustomers(params?: {
     page?: number;
@@ -399,6 +402,184 @@ export class CustomerService {
       total: mockCustomers.length, // Return total count of all customers (not filtered)
     };
   }
+
+
+// Update your CustomerService in customerService.ts - FIXED VERSION
+
+static async getAllTransactions(params?: {
+  page?: number;
+  limit?: number;
+  type?: string;
+  status?: string;
+  search?: string;
+}): Promise<{ transactions: Transaction[]; total: number }> {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  
+  // Get all customers first
+  const { customers } = await this.getCustomers();
+  let allTransactions: Transaction[] = [];
+
+  // Create comprehensive transaction data that works for BOTH tables
+  const transactionTypes: Transaction['type'][] = ['deposit', 'transfer', 'airtime', 'data', 'e-sim', 'refund'];
+  const statusTypes: Transaction['status'][] = ['successful', 'pending', 'failed'];
+  
+  // Generate transactions for each customer
+  customers.forEach((customer, customerIndex) => {
+    // Each customer gets 3-8 transactions
+    const transactionCount = 3 + (customerIndex % 6);
+    
+    for (let i = 0; i < transactionCount; i++) {
+      const transactionType = transactionTypes[i % transactionTypes.length];
+      const transactionStatus = statusTypes[i % statusTypes.length];
+      const amount = 1000 + (customerIndex * 500) + (i * 250); // Varied amounts
+      
+      const transaction: Transaction = {
+        id: `tx-${customer.user_id}-${i}`,
+        transaction_id: `TXN-00${customerIndex}${i}${customer.user_id}`,
+        user_id: customer.user_id,
+        type: transactionType,
+        amount: amount,
+        fee: transactionType === 'transfer' ? 10 : 0,
+        net_amount: transactionType === 'transfer' ? amount - 10 : amount,
+        date_time: this.generateRandomDate(),
+        status: transactionStatus,
+        recipient: transactionType === 'transfer' ? `80/${1234567 + i} - Opay` : undefined,
+        reference_number: `REF${customerIndex}${i}${Date.now()}`,
+        processing_time: transactionStatus === 'successful' ? 'Instant' : '2-5 minutes',
+        user: {
+          name: `${customer.first_name} ${customer.last_name}`,
+          first_name: customer.first_name,
+          last_name: customer.last_name,
+          avatar: customer.avatar
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      allTransactions.push(transaction);
+    }
+  });
+
+  // Apply filters
+  if (params?.type && params.type !== "") {
+    allTransactions = allTransactions.filter(
+      transaction => transaction.type === params.type
+    );
+  }
+
+  if (params?.status && params.status !== "") {
+    allTransactions = allTransactions.filter(
+      transaction => transaction.status === params.status
+    );
+  }
+
+  if (params?.search) {
+    const searchLower = params.search.toLowerCase();
+    allTransactions = allTransactions.filter(
+      transaction =>
+        transaction.transaction_id.toLowerCase().includes(searchLower) ||
+        transaction.user.name.toLowerCase().includes(searchLower) ||
+        transaction.user.first_name.toLowerCase().includes(searchLower) ||
+        transaction.user.last_name.toLowerCase().includes(searchLower)
+    );
+  }
+
+  // Sort by date (newest first)
+  allTransactions.sort((a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime());
+
+  // Apply pagination
+  let paginatedTransactions = allTransactions;
+  if (params?.page && params?.limit) {
+    const startIndex = (params.page - 1) * params.limit;
+    const endIndex = startIndex + params.limit;
+    paginatedTransactions = allTransactions.slice(startIndex, endIndex);
+  }
+
+  return {
+    transactions: paginatedTransactions,
+    total: allTransactions.length,
+  };
+}
+
+// Helper method to generate random dates
+private static generateRandomDate(): string {
+  const start = new Date(2024, 0, 1);
+  const end = new Date();
+  const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  
+  const date = randomDate.toLocaleDateString('en-US');
+  const time = randomDate.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  });
+  
+  return `${date}, ${time}`;
+}
+
+// Enhanced getTransactionStats method
+static async getTransactionStats(): Promise<{
+  totalVolume: number;
+  totalTransactions: number;
+  completed: number;
+  pending: number;
+  failed: number;
+}> {
+  const { transactions } = await this.getAllTransactions();
+  
+  const totalVolume = transactions.reduce((sum, t) => sum + t.amount, 0);
+  const totalTransactions = transactions.length;
+  const completed = transactions.filter(t => t.status === 'successful' || t.status === 'completed').length;
+  const pending = transactions.filter(t => t.status === 'pending').length;
+  const failed = transactions.filter(t => t.status === 'failed' || t.status === 'cancelled').length;
+
+  return {
+    totalVolume,
+    totalTransactions,
+    completed,
+    pending,
+    failed,
+  };
+}
+
+
+
+static async getLatestUsers(params?: {
+  limit?: number;
+  page?: number;
+}): Promise<{ customers: Customer[]; total: number }> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  
+  const { customers } = await this.getCustomers();
+  
+  // Sort by date_joined (newest first) - improved sorting
+  const sortedCustomers = [...customers].sort((a, b) => {
+    // Convert date strings to proper Date objects for accurate sorting
+    const parseDate = (dateStr: string) => {
+      const [month, day, year] = dateStr.split('/').map(Number);
+      return new Date(year, month - 1, day);
+    };
+    
+    const dateA = parseDate(a.date_joined);
+    const dateB = parseDate(b.date_joined);
+    return dateB.getTime() - dateA.getTime(); // Newest first
+  });
+
+  // Apply pagination
+  let paginatedCustomers = sortedCustomers;
+  if (params?.page && params?.limit) {
+    const startIndex = (params.page - 1) * params.limit;
+    const endIndex = startIndex + params.limit;
+    paginatedCustomers = sortedCustomers.slice(startIndex, endIndex);
+  } else if (params?.limit) {
+    paginatedCustomers = sortedCustomers.slice(0, params.limit);
+  }
+
+  return {
+    customers: paginatedCustomers,
+    total: customers.length,
+  };
+}
 
   static async getCustomerById(id: string): Promise<Customer> {
     await new Promise((resolve) => setTimeout(resolve, 300));

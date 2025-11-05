@@ -39,8 +39,8 @@ const pageConfig: Record<string, PageConfig> = {
   "/dashboard/features": { title: "Feature Management", icon: Zap },
   "/dashboard/customers": { title: "Customers", icon: Users },
   "/dashboard/kyc-verification": { title: "KYC Verification", icon: Shield },
-  "/dashboard/wallet": { title: "Wallet Overview", icon: Wallet },
-  "/dashboard/transactions": { title: "Transactions", icon: CreditCard },
+  "/dashboard/wallet-transactions/overview": { title: "Wallet Overview", icon: Wallet },
+  "/dashboard/wallet-transactions/transactions": { title: "Transactions/List", icon: CreditCard },
 
   "/dashboard/settings/personal-details": {
     title: "Settings / Personal Details",
@@ -80,6 +80,7 @@ export function Header({ onMenuClick }: HeaderProps) {
     title: "Overview",
     icon: Home,
   });
+  const [searchQuery, setSearchQuery] = useState('');
   const { customerName } = useCustomer();
 
   useEffect(() => {
@@ -121,6 +122,46 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   const IconComponent = currentPage.icon;
 
+  const getSearchPlaceholder = () => {
+    if (pathname.includes("/wallet-transactions")) {
+      return "Search by transaction ID or user...";
+    }
+    if (pathname.includes("/customers")) {
+      return "Search by customer name, email, or phone...";
+    }
+    if (pathname.includes("/kyc-verification")) {
+      return "Search by customer name or email...";
+    }
+    return "Search Anything";
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    
+    // Add debounced search functionality here
+    // You can integrate with your existing search logic
+    console.log('Search query:', value);
+    
+    // If you want to implement real-time search, you can:
+    // 1. Use a context to share search state across components
+    // 2. Dispatch a search action to your data layer
+    // 3. Use URL search params for persistent search
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle search submission
+    console.log('Search submitted:', searchQuery);
+    
+    // You can integrate with your existing search logic here
+    // For example, if using URL search params:
+    // const searchParams = new URLSearchParams(window.location.search);
+    // searchParams.set('search', searchQuery);
+    // router.push(`${pathname}?${searchParams.toString()}`);
+  };
+
+  const isTransactionPage = pathname.includes("/wallet-transactions");
+
   return (
     <header className="bg-white">
       <div className="border-b border-gray-200 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
@@ -156,15 +197,45 @@ export function Header({ onMenuClick }: HeaderProps) {
         </Button>
       </div>
 
+      {/* Enhanced Search Section with Transaction Search Integration */}
       <div className="border-b border-gray-200">
-        <div className="flex px-4 md:px-8 items-center gap-2 py-3 transition-all duration-200 hover:bg-gray-200 focus-within:ring-2 focus-within:ring-blue-500">
-          <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
-          <input
-            type="text"
-            placeholder="Search Anything"
-            className="bg-transparent outline-none text-sm md:text-base w-full placeholder-gray-500"
-          />
-        </div>
+        <form onSubmit={handleSearchSubmit} className="px-4 md:px-8">
+          <div className="flex items-center gap-2 py-3 transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 rounded-lg">
+            <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder={getSearchPlaceholder()}
+              className="bg-transparent outline-none text-sm md:text-base w-full placeholder-gray-500"
+            />
+            
+            {/* Optional: Add search filters for transaction pages */}
+            {isTransactionPage && searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </form>
+        
+        {/* Optional: Additional filters for transaction pages */}
+        {isTransactionPage && (
+          <div className="px-4 md:px-8 pb-3 flex gap-2">
+            {/* You can add filter chips or additional controls here */}
+            {searchQuery && (
+              <div className="text-xs text-gray-500">
+                Searching for: `&quot;`{searchQuery}`&quot;`
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );
